@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Download, Copy, Printer, FileText, CheckCircle, AlertCircle, Link as LinkIcon, Edit3 } from "lucide-react";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 import { saveAs } from "file-saver";
+import { saveHistoryItem } from "@/utils/historyStore";
 
 export default function DealViewer() {
   const { id } = useParams();
@@ -22,6 +23,9 @@ export default function DealViewer() {
         if (!res.ok) throw new Error("Failed to fetch deal");
         const data = await res.json();
         setDeal(data);
+        if (data?.status === "complete") {
+          saveHistoryItem(data);
+        }
         if (data?.report?.analyst_notes) {
           setAnalystNotes(data.report.analyst_notes);
         }
