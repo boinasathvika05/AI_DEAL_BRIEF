@@ -13,14 +13,14 @@ const formSchema = z.object({
   website: z.string().optional().or(z.literal("")),
   industry: z.string().min(1, "Industry is required"),
   country: z.string().min(1, "Country is required"),
-  revenue: z.number().optional().default(0),
-  ebitda: z.number().optional().default(0),
-  employees: z.number().optional().default(1),
-  funding_amount: z.number().optional().default(0),
-  funding_purpose: z.string().optional().default(""),
-  existing_debt: z.number().optional().default(0),
-  years_in_business: z.number().optional().default(0),
-  business_description: z.string().optional().default(""),
+  revenue: z.coerce.number().optional(),
+  ebitda: z.coerce.number().optional(),
+  employees: z.coerce.number().optional(),
+  funding_amount: z.coerce.number().optional(),
+  funding_purpose: z.string().optional(),
+  existing_debt: z.coerce.number().optional(),
+  years_in_business: z.coerce.number().optional(),
+  business_description: z.string().optional(),
   additional_notes: z.string().optional(),
 });
 
@@ -31,7 +31,7 @@ export default function NewDeal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       revenue: 0,

@@ -44,7 +44,7 @@ function WorkflowContent() {
       eventSource.close();
     });
 
-    eventSource.addEventListener("error", (e) => {
+    eventSource.addEventListener("error", (e: any) => {
       let message = "An error occurred during processing.";
       try {
         if (e.data) {
