@@ -1,0 +1,12 @@
+{
+  "name": "ai-deal-brief-machine",
+  "version": "1.0.0",
+  "description": "Enterprise AI Deal Brief Machine",
+  "scripts": {
+    "install-all": "npm install --prefix frontend && cd backend && .\\venv\\Scripts\\pip install -r requirements.txt",
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"cd backend && .\\venv\\Scripts\\uvicorn main:app --reload\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
