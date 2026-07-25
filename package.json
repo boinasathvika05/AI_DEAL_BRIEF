@@ -6,6 +6,9 @@
     "install-all": "npm install --prefix frontend && cd backend && .\\venv\\Scripts\\pip install -r requirements.txt",
     "dev": "concurrently \"npm run dev --prefix frontend\" \"cd backend && .\\venv\\Scripts\\uvicorn main:app --reload\""
   },
+  "dependencies": {
+    "next": "16.2.11"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2"
   }
