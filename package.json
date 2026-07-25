@@ -1,15 +1,36 @@
 {
-  "name": "ai-deal-brief-machine",
-  "version": "1.0.0",
-  "description": "Enterprise AI Deal Brief Machine",
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "install-all": "npm install --prefix frontend && cd backend && .\\venv\\Scripts\\pip install -r requirements.txt",
-    "dev": "concurrently \"npm run dev --prefix frontend\" \"cd backend && .\\venv\\Scripts\\uvicorn main:app --reload\""
+    "dev": "npx next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.2.11"
+    "@hookform/resolvers": "^5.4.0",
+    "docx": "^9.7.1",
+    "file-saver": "^2.0.5",
+    "framer-motion": "^12.42.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^1.26.0",
+    "next": "16.2.11",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-hook-form": "^7.82.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@tailwindcss/postcss": "^4",
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.11",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
