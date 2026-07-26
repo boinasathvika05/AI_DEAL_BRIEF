@@ -54,7 +54,18 @@ export default function NewDeal() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit deal");
+        let errorMsg = `Server error (${response.status})`;
+        try {
+          const errJson = await response.json();
+          if (errJson.detail) {
+            errorMsg = typeof errJson.detail === "string" ? errJson.detail : JSON.stringify(errJson.detail);
+          } else if (errJson.message) {
+            errorMsg = errJson.message;
+          }
+        } catch {
+          // Ignore json parse error
+        }
+        throw new Error(errorMsg);
       }
 
       const result = await response.json();
