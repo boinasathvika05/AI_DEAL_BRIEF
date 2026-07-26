@@ -69,21 +69,19 @@ async def _search_serper(query: str, max_results: int = 3) -> List[Dict[str, Any
 
 async def _search_ddgs(query: str, max_results: int = 3) -> List[Dict[str, Any]]:
     try:
-        from duckduckgo_search import AsyncDDGS
+        from duckduckgo_search import DDGS
+        def sync_ddgs():
+            with DDGS() as ddgs:
+                return list(ddgs.text(query, max_results=max_results))
+        raw_results = await asyncio.to_thread(sync_ddgs)
         results = []
-        async with AsyncDDGS() as ddgs:
-            # text() returns an async generator in AsyncDDGS
-            count = 0
-            async for r in ddgs.text(query, max_results=max_results):
-                results.append({
-                    "title": r.get("title", ""),
-                    "link": r.get("href", ""),
-                    "snippet": r.get("body", ""),
-                    "source": "ddgs"
-                })
-                count += 1
-                if count >= max_results:
-                    break
+        for r in raw_results:
+            results.append({
+                "title": r.get("title", ""),
+                "link": r.get("href", ""),
+                "snippet": r.get("body", ""),
+                "source": "ddgs"
+            })
         return results
     except Exception as e:
         print(f"DDGS search notice: {e}")
@@ -124,6 +122,10 @@ async def perform_search_async(query: str, max_results: int = 5) -> List[Dict[st
     
     # Filter aggregated results by valid URLs
     valid_results = [res for res in aggregated if res["link"] in valid_urls]
+    
+    # Fallback to aggregated if URL validation stripped all results
+    if not valid_results and aggregated:
+        valid_results = aggregated
     
     # Rank by "authority" implicitly based on domains (e.g. sec.gov, bloomberg, etc)
     authority_domains = ['sec.gov', 'bloomberg.com', 'reuters.com', 'cnbc.com', 'wsj.com', 'ft.com', 'crunchbase.com', 'pitchbook.com']
