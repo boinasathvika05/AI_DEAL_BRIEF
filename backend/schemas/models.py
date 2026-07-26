@@ -4,16 +4,16 @@ from typing import List, Optional, Literal, Dict, Any
 class DealInput(BaseModel):
     company_name: str
     website: Optional[str] = None
-    industry: str
-    country: str
-    revenue: float
-    ebitda: float
-    employees: int
-    funding_amount: float
-    funding_purpose: str
-    existing_debt: float
-    years_in_business: int
-    business_description: str
+    industry: str = ""
+    country: str = ""
+    revenue: float = 0.0
+    ebitda: float = 0.0
+    employees: int = 1
+    funding_amount: float = 0.0
+    funding_purpose: str = ""
+    existing_debt: float = 0.0
+    years_in_business: int = 0
+    business_description: str = ""
     additional_notes: Optional[str] = None
 
 class ValidationResult(BaseModel):
@@ -22,6 +22,15 @@ class ValidationResult(BaseModel):
     inconsistencies: List[str] = Field(description="Any illogical values.")
     cleaned_input: DealInput = Field(description="The normalized and cleaned input data.")
     validation_notes: str = Field(description="Brief notes on the validation.")
+
+class VerifiedSource(BaseModel):
+    url: str
+    title: str
+    provider: str
+
+class VerificationStatus(BaseModel):
+    field_name: str
+    status: str
 
 class CompanyResearch(BaseModel):
     company_profile: str = Field(description="Detailed overview of the company based on public info. If unavailable, state 'Information unavailable from public sources'.")
@@ -42,8 +51,8 @@ class CompanyResearch(BaseModel):
     funding_history: Optional[str] = Field(default=None, description="History of past funding rounds or capital raised.")
     market_trends: Optional[str] = Field(default=None, description="Broad market trends affecting the industry.")
     public_filings: Optional[str] = Field(default=None, description="Summary of relevant public filings (e.g. SEC/Companies House).")
-    verified_fields: Optional[Dict[str, Any]] = Field(default=None, description="Detailed dictionary of fields and their verification status.")
-    verified_sources: Optional[List[Dict[str, Any]]] = Field(default=None, description="Detailed list of sources, timestamps, and authority scores.")
+    verified_fields: Optional[List[VerificationStatus]] = Field(default=None, description="Detailed list of fields and their verification status.")
+    verified_sources: Optional[List[VerifiedSource]] = Field(default=None, description="Detailed list of sources.")
 
 class FinancialAnalysis(BaseModel):
     health_score: int = Field(description="Score from 1-100 indicating financial health based on provided inputs.")

@@ -48,7 +48,7 @@ async def run_research_agent_async(cleaned_input: DealInput) -> CompanyResearch:
         "2. DO NOT hallucinate or guess any facts, numbers, or competitors.\n"
         "3. If the search results do not provide enough information for a field, clearly state: 'Information unavailable from public sources'.\n"
         "4. Fill out ALL new optional evidence fields (headquarters, founded, revenue_public, etc.) if data is found in the search context.\n"
-        "5. For 'verified_fields', provide a JSON dictionary mapping fields (e.g. 'revenue', 'employees') to a status ('Verified Publicly', 'Unverified/Self-Reported', 'Conflicting Data').\n"
+        "5. For 'verified_fields', provide a list of objects with 'field_name' (e.g. 'revenue', 'employees') and 'status' ('Verified Publicly', 'Unverified/Self-Reported', 'Conflicting Data').\n"
         "6. Calculate a 'confidence_level' (0.0 to 1.0) based on how much of the user's input matches the public data.\n"
         "7. Ensure your analysis is professional, objective, and deeply structured."
     )
@@ -78,7 +78,8 @@ For the `sources_used` field, use the following extracted source links:
         result.sources_used = list(sources)[:15] # limit to 15 max
     
     # Attach raw source details for downstream transparency
-    result.verified_sources = source_details[:15]
+    from schemas.models import VerifiedSource
+    result.verified_sources = [VerifiedSource(**sd) for sd in source_details[:15]]
         
     return result
 
