@@ -47,10 +47,7 @@ export default function NewDeal() {
     setIsSubmitting(true);
     setError(null);
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
-      const targetUrl = baseUrl ? `${baseUrl}/api/deals` : "/api/deals";
-
-      const response = await fetch(targetUrl, {
+      const response = await fetch("/api/deals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

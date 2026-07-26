@@ -3,31 +3,7 @@ import { getStoredDeal, setStoredDeal, generateFullDealReport } from "@/utils/de
 
 export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
   const { id } = await context.params;
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-    const res = await fetch(`${backendUrl}/api/deals/${id}/stream`, {
-      signal: controller.signal
-    }).finally(() => clearTimeout(timeoutId));
-
-    if (res.ok && res.body) {
-      return new Response(res.body, {
-        headers: {
-          "Content-Type": "text/event-stream",
-          "Cache-Control": "no-cache",
-          "Connection": "keep-alive",
-        },
-      });
-    }
-  } catch (err) {
-    // External backend offline or unavailable - fallback to native stream
-  }
-
-  // Native self-contained SSE streaming
-  const dealEntry = getStoredDeal(id) || { status: "running", input: { company_name: "Borrower" } };
+  const dealEntry = getStoredDeal(id) || { status: "running", input: { company_name: "Enterprise Borrower" } };
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
@@ -50,10 +26,10 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
       for (const stepInfo of steps) {
         const payload = `event: progress\ndata: ${JSON.stringify(stepInfo)}\n\n`;
         controller.enqueue(encoder.encode(payload));
-        await new Promise((r) => setTimeout(r, 400));
+        await new Promise((r) => setTimeout(r, 350));
       }
 
-      // Generate report and store
+      // Generate report and store in memory
       const finalReport = generateFullDealReport(dealEntry.input);
       setStoredDeal(id, {
         status: "complete",
@@ -74,7 +50,7 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
   return new Response(stream, {
     headers: {
       "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
+      "Cache-Control": "no-cache, no-transform",
       "Connection": "keep-alive",
     },
   });
