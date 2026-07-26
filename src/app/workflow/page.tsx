@@ -48,6 +48,7 @@ function WorkflowContent() {
       setIsComplete(true);
       setCompletedSteps(steps.map(s => s.id));
       eventSource.close();
+      router.push(`/deal/${dealId}`);
     });
 
     eventSource.addEventListener("close", () => {
