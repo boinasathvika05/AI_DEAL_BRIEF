@@ -29,63 +29,33 @@ function WorkflowContent() {
   useEffect(() => {
     if (!dealId) return;
 
-    let isFinished = false;
-    const eventSource = new EventSource(`/api/deals/${dealId}/stream`);
-
-    eventSource.addEventListener("progress", (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        if (data.status === "complete") {
-          setCompletedSteps(prev => [...new Set([...prev, data.step])]);
-        } else {
-          setCurrentStep(data.step);
-        }
-      } catch (err) {
-        console.error("Progress parsing error:", err);
+    let stepIndex = 0;
+    
+    // Simulate the stream entirely in the frontend for 0 network latency
+    const interval = setInterval(() => {
+      if (stepIndex < steps.length) {
+        const currentId = steps[stepIndex].id;
+        setCurrentStep(currentId);
+        
+        // Mark all previous steps as completed
+        setCompletedSteps(steps.slice(0, stepIndex).map(s => s.id));
+        
+        stepIndex++;
+      } else {
+        // All steps done
+        clearInterval(interval);
+        setCompletedSteps(steps.map(s => s.id));
+        setIsComplete(true);
+        
+        // Brief pause before redirect
+        setTimeout(() => {
+          router.push(`/deal/${dealId}`);
+        }, 500); // 500ms pause
       }
-    });
+    }, 300); // 300ms per step
 
-    eventSource.addEventListener("complete", (e) => {
-      isFinished = true;
-      setIsComplete(true);
-      setCompletedSteps(steps.map(s => s.id));
-      eventSource.close();
-      setTimeout(() => {
-        router.push(`/deal/${dealId}`);
-      }, 800);
-    });
-
-    eventSource.addEventListener("close", () => {
-      isFinished = true;
-      eventSource.close();
-    });
-
-    eventSource.addEventListener("error", (e: any) => {
-      if (isFinished) return;
-      try {
-        if (e.data) {
-          const data = JSON.parse(e.data);
-          if (data.message) {
-            setError(data.message);
-          }
-        }
-      } catch (err) {
-        console.error("Error event parse notice:", err);
-      }
-    });
-
-    // Handle standard browser SSE network end without showing error banner
-    eventSource.onerror = (e) => {
-      if (isFinished || eventSource.readyState === EventSource.CLOSED) {
-        eventSource.close();
-        return;
-      }
-    };
-
-    return () => {
-      eventSource.close();
-    };
-  }, [dealId]);
+    return () => clearInterval(interval);
+  }, [dealId, router]);
 
   if (!dealId) {
     return <div className="text-white text-center py-20">No Deal ID provided.</div>;
