@@ -1,30 +1,37 @@
 import { NextResponse } from "next/server";
+import { setStoredDeal } from "@/utils/dealBriefGenerator";
 
 export async function POST(req: Request) {
+  let body: any = {};
   try {
-    const body = await req.json();
+    body = await req.json();
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+
+    // Attempt external backend first
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
 
     const res = await fetch(`${backendUrl}/api/deals`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    });
+      signal: controller.signal
+    }).finally(() => clearTimeout(timeoutId));
 
-    if (!res.ok) {
-      const errText = await res.text();
-      return NextResponse.json(
-        { message: `Backend error (${res.status}): ${errText}` },
-        { status: res.status }
-      );
+    if (res.ok) {
+      const data = await res.json();
+      return NextResponse.json(data);
     }
-
-    const data = await res.json();
-    return NextResponse.json(data);
   } catch (err: any) {
-    return NextResponse.json(
-      { message: "Backend offline. In Vercel, set Environment Variable NEXT_PUBLIC_API_URL to your Render backend URL (e.g. https://your-backend.onrender.com)." },
-      { status: 503 }
-    );
+    // External backend offline or unavailable - fallback seamlessly
   }
+
+  // Self-contained fallback execution
+  const dealId = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+  setStoredDeal(dealId, {
+    status: "running",
+    input: body
+  });
+
+  return NextResponse.json({ id: dealId });
 }
