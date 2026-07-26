@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     return NextResponse.json(data);
   } catch (err: any) {
     return NextResponse.json(
-      { message: "Backend server on port 8000 is offline. Please start Python backend with: cd backend && python -m uvicorn main:app --port 8000" },
+      { message: "Backend offline. In Vercel, set Environment Variable NEXT_PUBLIC_API_URL to your Render backend URL (e.g. https://your-backend.onrender.com)." },
       { status: 503 }
     );
   }

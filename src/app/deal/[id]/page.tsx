@@ -19,7 +19,9 @@ export default function DealViewer() {
   useEffect(() => {
     const fetchDeal = async () => {
       try {
-        const res = await fetch(`/api/deals/${id}`);
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
+        const targetUrl = baseUrl ? `${baseUrl}/api/deals/${id}` : `/api/deals/${id}`;
+        const res = await fetch(targetUrl);
         if (!res.ok) throw new Error("Failed to fetch deal");
         const data = await res.json();
         setDeal(data);

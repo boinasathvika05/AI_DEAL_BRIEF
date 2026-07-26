@@ -28,7 +28,9 @@ function WorkflowContent() {
     if (!dealId) return;
 
     let isFinished = false;
-    const eventSource = new EventSource(`/api/deals/${dealId}/stream`);
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
+    const streamUrl = baseUrl ? `${baseUrl}/api/deals/${dealId}/stream` : `/api/deals/${dealId}/stream`;
+    const eventSource = new EventSource(streamUrl);
 
     eventSource.addEventListener("progress", (e) => {
       try {
