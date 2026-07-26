@@ -26,7 +26,7 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
       for (const stepInfo of steps) {
         const payload = `event: progress\ndata: ${JSON.stringify(stepInfo)}\n\n`;
         controller.enqueue(encoder.encode(payload));
-        await new Promise((r) => setTimeout(r, 350));
+        await new Promise((r) => setTimeout(r, 60));
       }
 
       // Generate report and store in memory
