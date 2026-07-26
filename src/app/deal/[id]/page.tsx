@@ -7,6 +7,8 @@ import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 import { saveAs } from "file-saver";
 import { saveHistoryItem } from "@/utils/historyStore";
 
+import { generateFullDealReport } from "@/utils/dealBriefGenerator";
+
 export default function DealViewer() {
   const { id } = useParams();
   const [deal, setDeal] = useState<any>(null);
@@ -19,15 +21,40 @@ export default function DealViewer() {
   useEffect(() => {
     const fetchDeal = async () => {
       try {
+        let data: any = null;
         const res = await fetch(`/api/deals/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch deal");
-        const data = await res.json();
-        setDeal(data);
-        if (data?.status === "complete") {
-          saveHistoryItem(data);
+        if (res.ok) {
+          data = await res.json();
         }
-        if (data?.report?.analyst_notes) {
-          setAnalystNotes(data.report.analyst_notes);
+
+        // Always check localStorage for exact user submitted inputs to ensure 100% data fidelity on Vercel
+        if (typeof window !== "undefined" && id) {
+          const localInputStr = localStorage.getItem(`deal_input_${id}`);
+          if (localInputStr) {
+            try {
+              const localInput = JSON.parse(localInputStr);
+              if (localInput && localInput.company_name) {
+                const clientReport = generateFullDealReport(localInput);
+                data = {
+                  status: "complete",
+                  input: localInput,
+                  report: clientReport
+                };
+              }
+            } catch (e) {
+              console.error("Local storage parse error:", e);
+            }
+          }
+        }
+
+        if (data) {
+          setDeal(data);
+          if (data?.status === "complete") {
+            saveHistoryItem(data);
+          }
+          if (data?.report?.analyst_notes) {
+            setAnalystNotes(data.report.analyst_notes);
+          }
         }
       } catch (err) {
         console.error(err);

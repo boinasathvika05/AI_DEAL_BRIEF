@@ -69,6 +69,9 @@ export default function NewDeal() {
       }
 
       const result = await response.json();
+      if (typeof window !== "undefined") {
+        localStorage.setItem(`deal_input_${result.id}`, JSON.stringify(data));
+      }
       router.push(`/workflow?id=${result.id}`);
     } catch (err: any) {
       setError(err.message || "An error occurred");
