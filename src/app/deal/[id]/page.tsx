@@ -124,10 +124,10 @@ export default function DealViewer() {
               <p className="text-2xl font-bold text-white">{confidenceScore}%</p>
             </div>
             <div className="relative w-16 h-16 rounded-full flex items-center justify-center bg-slate-800">
-              <svg className="w-16 h-16 transform -rotate-90">
-                <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-slate-700" />
-                <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="6" fill="transparent"
-                  strokeDasharray="175" strokeDashoffset={175 - (175 * confidenceScore) / 100}
+              <svg viewBox="0 0 64 64" className="w-16 h-16 transform -rotate-90 overflow-visible">
+                <circle cx="32" cy="32" r="26" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-slate-700" />
+                <circle cx="32" cy="32" r="26" stroke="currentColor" strokeWidth="6" fill="transparent"
+                  strokeDasharray="163" strokeDashoffset={163 - (163 * confidenceScore) / 100}
                   className={confidenceScore > 80 ? "text-green-500" : confidenceScore > 50 ? "text-yellow-500" : "text-red-500"} 
                   strokeLinecap="round" />
               </svg>
