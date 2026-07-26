@@ -6,12 +6,14 @@ import { motion } from "framer-motion";
 import { CheckCircle2, Circle, Loader2, ArrowRight } from "lucide-react";
 
 const steps = [
-  { id: "validation", label: "Validating Deal Input" },
-  { id: "research", label: "Scraping Public Web & Live Intelligence" },
-  { id: "financial", label: "Calculating Debt Ratios & Financials" },
-  { id: "recommendation", label: "Structuring Financing Strategy" },
-  { id: "lender", label: "Matching Lenders via Database" },
-  { id: "report", label: "Compiling 18-Section Enterprise Brief" },
+  { id: "validation", label: "Validation Agent" },
+  { id: "research", label: "Research Agent" },
+  { id: "financial", label: "Financial Analysis Agent" },
+  { id: "recommendation", label: "Debt Recommendation Agent" },
+  { id: "lender", label: "Lender Matching Agent" },
+  { id: "ic_score", label: "Investment Committee Agent" },
+  { id: "confidence", label: "AI Confidence & Explainability Agent" },
+  { id: "report", label: "Report Generator Agent" },
 ];
 
 function WorkflowContent() {

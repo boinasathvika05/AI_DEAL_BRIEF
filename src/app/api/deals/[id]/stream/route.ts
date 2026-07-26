@@ -9,24 +9,28 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
   const stream = new ReadableStream({
     async start(controller) {
       const steps = [
-        { step: "validation", status: "running", message: "Validating Input..." },
+        { step: "validation", status: "running", message: "Validate required fields" },
         { step: "validation", status: "complete", message: "Validation Complete" },
-        { step: "research", status: "running", message: "Scraping Public Web & Gathering Live Intelligence..." },
-        { step: "research", status: "complete", message: "Live Research Complete" },
-        { step: "financial", status: "running", message: "Calculating Debt Ratios & Financial Health..." },
+        { step: "research", status: "running", message: "Search official company website" },
+        { step: "research", status: "complete", message: "Research Complete" },
+        { step: "financial", status: "running", message: "Revenue analysis" },
         { step: "financial", status: "complete", message: "Financial Analysis Complete" },
-        { step: "recommendation", status: "running", message: "Structuring Financing Strategy..." },
-        { step: "recommendation", status: "complete", message: "Financing Strategy Complete" },
-        { step: "lender", status: "running", message: "Matching Lenders via Database..." },
+        { step: "recommendation", status: "running", message: "Assess debt suitability" },
+        { step: "recommendation", status: "complete", message: "Debt Recommendation Complete" },
+        { step: "lender", status: "running", message: "Match lenders" },
         { step: "lender", status: "complete", message: "Lender Matching Complete" },
-        { step: "report", status: "running", message: "Compiling 18-Section Enterprise Deal Brief..." },
-        { step: "report", status: "complete", message: "Deal Brief Generated" },
+        { step: "ic_score", status: "running", message: "Calculate IC Score" },
+        { step: "ic_score", status: "complete", message: "Investment Committee Score Complete" },
+        { step: "confidence", status: "running", message: "Confidence score" },
+        { step: "confidence", status: "complete", message: "AI Confidence & Explainability Complete" },
+        { step: "report", status: "running", message: "Generate Executive Summary" },
+        { step: "report", status: "complete", message: "Report Generation Complete" },
       ];
 
       for (const stepInfo of steps) {
         const payload = `event: progress\ndata: ${JSON.stringify(stepInfo)}\n\n`;
         controller.enqueue(encoder.encode(payload));
-        await new Promise((r) => setTimeout(r, 10));
+        await new Promise((r) => setTimeout(r, 2));
       }
 
       // Generate report and store in memory
