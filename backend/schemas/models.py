@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional, Literal
+from typing import List, Optional, Literal, Dict, Any
 
 class DealInput(BaseModel):
     company_name: str
@@ -31,6 +31,19 @@ class CompanyResearch(BaseModel):
     recent_news: str = Field(description="Recent news/trends. If none, state 'No recent public news available'.")
     confidence_level: float = Field(description="AI confidence in this research from 0 to 1 based on data availability.")
     sources_used: List[str] = Field(description="URLs or specific names of public sources used.")
+    
+    # Extended Enterprise Data Fields (Optional for backward compatibility)
+    headquarters: Optional[str] = Field(default=None, description="Company headquarters location if public.")
+    founded: Optional[str] = Field(default=None, description="Founding year if public.")
+    years_in_business_public: Optional[str] = Field(default=None, description="Publicly verified years in business.")
+    employee_count_public: Optional[str] = Field(default=None, description="Publicly verified employee count.")
+    revenue_public: Optional[str] = Field(default=None, description="Publicly verified revenue if available.")
+    ebitda_public: Optional[str] = Field(default=None, description="Publicly verified EBITDA if available.")
+    funding_history: Optional[str] = Field(default=None, description="History of past funding rounds or capital raised.")
+    market_trends: Optional[str] = Field(default=None, description="Broad market trends affecting the industry.")
+    public_filings: Optional[str] = Field(default=None, description="Summary of relevant public filings (e.g. SEC/Companies House).")
+    verified_fields: Optional[Dict[str, Any]] = Field(default=None, description="Detailed dictionary of fields and their verification status.")
+    verified_sources: Optional[List[Dict[str, Any]]] = Field(default=None, description="Detailed list of sources, timestamps, and authority scores.")
 
 class FinancialAnalysis(BaseModel):
     health_score: int = Field(description="Score from 1-100 indicating financial health based on provided inputs.")

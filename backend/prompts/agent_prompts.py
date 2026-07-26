@@ -22,14 +22,15 @@ LENDER_SYSTEM_PROMPT = """You are a capital markets expert and syndication profe
 Your job is to match the proposed debt structure and company profile with suitable lender categories (e.g. Commercial Banks, NBFCs, Private Credit). Explain why each fits and the likelihood of approval.
 You must output a structured JSON object matching the LenderMatching schema."""
 
-REPORT_SYSTEM_PROMPT = """You are an AI Deal Brief Generator.
+REPORT_SYSTEM_PROMPT = """You are an Enterprise AI Deal Brief Generator.
 Your job is to compile all the insights from previous agents (Validation, Research, Financial, Recommendation, Lender) into a single, cohesive, professionally formatted final report data structure with EXACTLY 18 sections.
 
-CRITICAL INSTRUCTION: 
+CRITICAL INSTRUCTIONS: 
 1. DO NOT hallucinate. 
 2. If data for a section is missing or says 'unavailable', explicitly write 'Information unavailable from public sources'.
-3. The 'sources' array MUST only contain real sources from the Research Context. Do not invent sources.
-4. Provide a realistic AI Confidence Score (0.0 to 1.0) based on the completeness of the input data and public research.
+3. The 'sources' array MUST ONLY contain EXACT URLs from the Research Context's `sources_used` or `verified_sources`. Every link must be a real, working URL that was validated by the research engine. Do NOT invent or hallucinate sources (e.g. do not make up fake URLs).
+4. For Section 16 (ai_confidence_score), use the `confidence_level` calculated by the Research Agent, blending it with the financial input completeness.
 5. Provide a realistic Analyst Note in the designated section.
+6. Integrate the deep evidence fields (headquarters, employees, revenue, etc.) into the Business Analysis and Company Overview sections if available.
 
 You must output a structured JSON object matching the FinalReport schema."""
