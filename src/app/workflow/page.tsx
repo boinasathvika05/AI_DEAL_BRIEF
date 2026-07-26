@@ -50,7 +50,9 @@ function WorkflowContent() {
       setIsComplete(true);
       setCompletedSteps(steps.map(s => s.id));
       eventSource.close();
-      router.push(`/deal/${dealId}`);
+      setTimeout(() => {
+        router.push(`/deal/${dealId}`);
+      }, 800);
     });
 
     eventSource.addEventListener("close", () => {
