@@ -31,7 +31,8 @@ def generate_analytical_fallback(user_prompt: str, response_schema: Type[BaseMod
         )
 
     if response_schema == CompanyResearch:
-        sources = [cleaned_input.website] if cleaned_input.website else ["https://sec.gov", "https://bloomberg.com"]
+        web = cleaned_input.website if cleaned_input.website and cleaned_input.website.startswith("http") else None
+        sources = [web] if web else ["https://sec.gov", "https://bloomberg.com"]
         return CompanyResearch(
             company_profile=f"{cleaned_input.company_name} is an established company operating in the {cleaned_input.industry} sector in {cleaned_input.country}. The business employs approximately {cleaned_input.employees} personnel with {cleaned_input.years_in_business} years of operating history.",
             industry_analysis=f"The {cleaned_input.industry} market in {cleaned_input.country} demonstrates steady compound annual growth driven by digital transformation and macroeconomic demand.",
@@ -125,7 +126,8 @@ def generate_analytical_fallback(user_prompt: str, response_schema: Type[BaseMod
         elif leverage > 3.2:
             risk_level = "Medium"
 
-        sources = [cleaned_input.website] if cleaned_input.website else ["https://sec.gov", "https://bloomberg.com"]
+        web = cleaned_input.website if cleaned_input.website and cleaned_input.website.startswith("http") else None
+        sources = [web] if web else ["https://sec.gov", "https://bloomberg.com"]
 
         return FinalReport(
             executive_summary=f"{cleaned_input.company_name} is seeking ${funding:,.0f} in capital for {cleaned_input.funding_purpose}. With annual revenue of ${rev:,.0f} and EBITDA of ${ebitda:,.0f}, the credit profile demonstrates manageable leverage ({leverage:.2f}x Debt/EBITDA) and strong debt service capability.",

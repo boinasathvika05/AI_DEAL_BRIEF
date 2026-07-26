@@ -110,10 +110,7 @@ export default function DealViewer() {
           </div>
 
           <div className="flex flex-wrap justify-end gap-2">
-            <button onClick={() => window.print()} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-blue-500/20 text-white">
-              <Printer size={16} /> Save PDF / Print
-            </button>
-            <button onClick={handleDownloadDOCX} className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-sm font-medium transition-colors text-white">
+            <button onClick={handleDownloadDOCX} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition-colors text-white shadow-lg shadow-blue-500/20">
               <FileText size={16} /> DOCX
             </button>
             <button onClick={handleCopyMarkdown} className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-sm font-medium transition-colors text-white">
